@@ -315,11 +315,11 @@ class SwimmingSquid(PaiaGame):
             if isinstance(food, Garbage):
                 food.set_center_x_and_y(
                     random.randint(self.playground.left, self.playground.right),
-                    0
+                    self.playground.top-10
                 )
             else:
                 food.set_center_x_and_y(
-                    random.choice([self.playground.left, self.playground.right]),
+                    random.choice([self.playground.left-10, self.playground.right+10]),
                     random.randint(self.playground.top, self.playground.bottom)
                 )
 
