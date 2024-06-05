@@ -281,7 +281,7 @@ class SwimmingSquid(PaiaGame):
                 "state": self.game_result_state,
                 "attachment": [
                     {
-                        "player": get_ai_name(0),
+                        "player_num": get_ai_name(0),
                         "rank": 1,
                         "score": self.squid.score,
                         "passed": self.is_passed
