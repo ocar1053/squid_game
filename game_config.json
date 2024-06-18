@@ -1,11 +1,11 @@
 {
   "game_name": "swimming_squid",
   "version": "2.4.1",
-  "url": "https://github.com/PAIA-Playful-AI-Arena/swimming-squid",
+  "url": "https://github.com/PAIA-Playful-AI-Arena/swimming_squid",
   "description": "這是一個魷魚吃東西小遊戲，除了讓你熟習所有基本操作，也是 PAIA 的遊戲教學範例",
   "logo": [
     "./asset/logo.png",
-    "https://raw.githubusercontent.com/PAIA-Playful-AI-Arena/swimming-squid/main/asset/logo.png"
+    "https://raw.githubusercontent.com/PAIA-Playful-AI-Arena/swimming_squid/main/asset/logo.png"
   ],
   "user_num": {
     "min": 1,

@@ -276,9 +276,9 @@ class SwimmingSquid(PaiaGame):
         send game result
         """
         if self.get_game_status() == GameStatus.GAME_PASS:
-            self.game_result_state = GameResultState.FINISH
+            self.game_result_state = GameResultState.PASSED
         return {"frame_used": self.frame_count,
-                "state": self.game_result_state,
+                "status": self.game_result_state,
                 "attachment": [
                     {
                         "player_num": get_ai_name(0),

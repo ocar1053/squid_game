@@ -1,4 +1,4 @@
-# Swimming-Squid
+# swimming_squid
 這是一個簡單的遊戲，主要用來示範如何在PAIA 上發布一個遊戲
 ![](asset/easy_game.gif)
 ## Game Config
