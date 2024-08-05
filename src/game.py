@@ -13,8 +13,8 @@ from .game_object import Squid, LevelParams
 from .sound_controller import SoundController
 
 
-def revise_ball(ball: Squid, playground: pygame.Rect):
-    ball_rect = copy.deepcopy(ball.rect)
+def revise_squid_coordinate(squid: Squid, playground: pygame.Rect):
+    ball_rect = copy.deepcopy(squid.rect)
     if ball_rect.left < playground.left:
         ball_rect.left = playground.left
     elif ball_rect.right > playground.right:
@@ -24,7 +24,7 @@ def revise_ball(ball: Squid, playground: pygame.Rect):
         ball_rect.top = playground.top
     elif ball_rect.bottom > playground.bottom:
         ball_rect.bottom = playground.bottom
-    ball.rect = ball_rect
+    squid.rect = ball_rect
     pass
 
 
@@ -40,13 +40,13 @@ class SwimmingSquid(PaiaGame):
             sound: str = "off",
             *args, **kwargs):
         super().__init__(user_num=1)
-        self.game_result_state = GameResultState.FAIL
+        self.game_result_state = GameResultState.UN_PASSED
         self.scene = Scene(width=WIDTH, height=HEIGHT, color=BG_COLOR, bias_x=0, bias_y=0)
         self._level = level
         self._level_file = level_file
         self.foods = pygame.sprite.Group()
         self.sound_controller = SoundController(sound)
-
+        self._game_params = None
         self._init_game()
 
     def _init_game_by_file(self, level_file_path: str):
@@ -86,6 +86,11 @@ class SwimmingSquid(PaiaGame):
 
             self.frame_count = 0
             self._frame_count_down = self._frame_limit
+            game_params.top = self.playground.top
+            game_params.left = self.playground.left
+            game_params.bottom = self.playground.bottom
+            game_params.right = self.playground.right
+            self._game_params = game_params
             self.sound_controller.play_music()
 
     def update(self, commands):
@@ -97,7 +102,7 @@ class SwimmingSquid(PaiaGame):
             action = "NONE"
 
         self.squid.update(action)
-        revise_ball(self.squid, self.playground)
+        revise_squid_coordinate(self.squid, self.playground)
         # update sprite
         self.foods.update(playground=self.playground, squid=self.squid)
 
@@ -132,13 +137,9 @@ class SwimmingSquid(PaiaGame):
         we could send different data to different ai
         """
         to_players_data = {}
-        foods_data = []
-        for food in self.foods:
-            foods_data.append(
-                {"x": food.rect.centerx, "y": food.rect.centery,
-                 "w": food.rect.width, "h": food.rect.height,
-                 "type": str(food.type), "score": food.score}
-            )
+        foods_data = [{"x": food.rect.centerx, "y": food.rect.centery,
+                       "w": food.rect.width, "h": food.rect.height,
+                       "type": str(food.type), "score": food.score} for food in self.foods]
 
         data_to_1p = {
             "frame": self.frame_count,
@@ -151,7 +152,8 @@ class SwimmingSquid(PaiaGame):
             "foods": foods_data,
             "score": self.squid.score,
             "score_to_pass": self._score_to_pass,
-            "status": self.get_game_status()
+            "status": self.get_game_status(),
+            "env": self._game_params.__dict__
 
         }
 
@@ -315,12 +317,14 @@ class SwimmingSquid(PaiaGame):
             if isinstance(food, Garbage):
                 food.set_center_x_and_y(
                     random.randint(self.playground.left, self.playground.right),
-                    self.playground.top-10
+
+                    random.randint(self.playground.top - 30, self.playground.top)
+
                 )
             else:
                 food.set_center_x_and_y(
-                    random.choice([self.playground.left-10, self.playground.right+10]),
-                    random.randint(self.playground.top, self.playground.bottom)
+                    random.randint(self.playground.left + 20, self.playground.right - 20),
+                    random.randint(self.playground.top + 20, self.playground.bottom - 20)
                 )
 
         pass
