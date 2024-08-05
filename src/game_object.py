@@ -1,6 +1,7 @@
 import math
 import pydantic
 import pygame.sprite
+from pydantic import validator
 
 from .env import *
 from .foods import Food
@@ -21,6 +22,12 @@ class LevelParams(pydantic.BaseModel):
     garbage_1: int = 0
     garbage_2: int = 0
     garbage_3: int = 0
+
+    left:int=-1
+    right:int=-1
+    top:int=-1
+    bottom:int=-1
+
 
 
 # level_thresholds = [10, 15, 20, 25, 30]

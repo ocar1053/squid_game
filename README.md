@@ -1,14 +1,16 @@
 # **Swimming Squid** 魷來魷去
 
 ![swimming_squid](https://img.shields.io/github/v/tag/PAIA-Playful-AI-Arena/swimming_squid)
-[![Python 3.9](https://img.shields.io/badge/python-3.9-blue.svg)](https://www.python.org/downloads/release/python-390/)
-[![MLGame](https://img.shields.io/badge/MLGame->10.3.2-<COLOR>.svg)](https://github.com/PAIA-Playful-AI-Arena/MLGame)
-[![pygame](https://img.shields.io/badge/pygame-2.0.1-<COLOR>.svg)](https://github.com/pygame/pygame/releases/tag/2.0.1)
+
+[![MLGame](https://img.shields.io/badge/MLGame->10.4.6a2-<COLOR>.svg)](https://github.com/PAIA-Playful-AI-Arena/MLGame)
 
 
-這是一個吃東西小遊戲，也是 PAIA 的遊戲教學範例
+這是一個魷魚吃東西小遊戲，茫茫的海洋中有美味的食物，也有人類拋棄的垃圾，請用你的AI幫助小小魷魚平安長大。
 
 ![demo](https://github.com/PAIA-Playful-AI-Arena/swimming_squid/blob/main/asset/swimming_squid.gif?raw=true)
+# 更新內容(2.4.4)
+1. 食物將會隨機生成。
+2. 更新文件與內容。
 
 ---
 # 基礎介紹
@@ -17,7 +19,7 @@
 
 - 直接啟動 [main.py](http://main.py) 即可執行
 
-### 遊戲參數設定
+## 遊戲參數設定
 
 ```python
 # main.py 
@@ -46,7 +48,13 @@ game = SwimmingSquid(
 
 1. 時間結束前，吃到的食物少於`score`，即算失敗。
 
+# 座標系統
+1. 使用 pygame 座標系，`左上角`為原點，`X軸`往`右`為正，`Y軸`往`下`為正
+2. 回傳的物件座標，皆為物體`中心點`座標
+
+
 ---
+
 
 # 進階說明
 
@@ -148,7 +156,16 @@ class MLPlay:
       "x": 54,
       "y": 194
     }
-  ]
+  ],
+  "env": {
+    "time_to_play": 600,
+    "playground_size_w":700, 
+    "playground_size_h":550,
+    "left": 100,
+    "right": 500,
+    "top": 100,
+    "bottom": 600
+  }
 
 }
 ```
@@ -164,6 +181,8 @@ class MLPlay:
   -  `type` 食物類型： `FOOD_1`, `FOOD_2`, `FOOD_3`, `GARBAGE_1`, `GARBAGE_2`, `GARBAGE_3`
 - `score`：目前得到的分數
 - `score_to_pass`：通關分數
+- `env`：環境資訊，裡面會包含遊戲設定檔的所有參數，也可以拿到邊界資訊。
+
 - `status`： 目前遊戲的狀態
     - `GAME_ALIVE`：遊戲進行中
     - `GAME_PASS`：遊戲通關
@@ -185,7 +204,7 @@ class MLPlay:
 ```json
 {
   "frame_used": 100,
-  "state": "FAIL",
+  "status": "fail",
   "attachment": [
     {
       "squid": "1P",
@@ -198,9 +217,9 @@ class MLPlay:
 ```
 
 - `frame_used`：表示使用了多少個frame
-- `state`：表示遊戲結束的狀態
-    - `FAIL`：遊戲失敗
-    - `FINISH`：遊戲完成
+- `status`：表示遊戲結束的狀態
+  - `passed`:達到指定分數，回傳通過
+  - `un_passed`:沒有達到指定分數，回傳不通過
 - `attachment`：紀錄遊戲各個玩家的結果與分數等資訊
     - `squid`：玩家編號
     - `score`：吃到的食物總數
