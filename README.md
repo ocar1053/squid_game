@@ -8,6 +8,9 @@
 這是一個魷魚吃東西小遊戲，茫茫的海洋中有美味的食物，也有人類拋棄的垃圾，請用你的AI幫助小小魷魚平安長大。
 
 ![demo](https://github.com/PAIA-Playful-AI-Arena/swimming_squid/blob/main/asset/swimming_squid.gif?raw=true)
+# 更新內容(2.5.0b2)
+1. 調整回傳資料的格式，讓單人遊戲與對戰版的格式可相容。
+
 # 更新內容(2.4.4)
 1. 食物將會隨機生成。
 2. 更新文件與內容。
@@ -100,12 +103,12 @@ class MLPlay:
   "frame": 15,
   "score": 8,
   "score_to_pass": 10,
-  "squid_x": 350,
-  "squid_y": 300,
-  "squid_h": 60,
-  "squid_w": 40,
-  "squid_lv": 1,
-  "squid_vel": 10,
+  "self_x": 350,
+  "self_y": 300,
+  "self_h": 60,
+  "self_w": 40,
+  "self_lv": 1,
+  "self_vel": 10,
   "status": "GAME_ALIVE",
   "foods": [
     {
@@ -158,25 +161,32 @@ class MLPlay:
     }
   ],
   "env": {
-    "time_to_play": 600,
-    "playground_size_w":700, 
-    "playground_size_h":550,
-    "left": 100,
-    "right": 500,
-    "top": 100,
-    "bottom": 600
+      "time_to_play": 600,
+      "playground_size_w":700, 
+      "playground_size_h":550,
+      "left": 100,
+      "right": 500,
+      "top": 100,
+      "bottom": 600,
+      "food_1": 6,
+      "food_2": 4,
+      "food_3": 2,
+      "garbage_1": 3,
+      "garbage_2": 2,
+      "garbage_3": 2,
+      "score_to_pass": 80
   }
 
 }
 ```
 
 - `frame`：遊戲畫面更新的編號
-- `squid_x`：玩家角色的Ｘ座標，表示方塊的`中心點`座標值，單位 pixel。
-- `squid_y`：玩家角色的Ｙ座標，表示方塊的`中心點`座標值，單位 pixel。
-- `squid_w`：玩家角色的寬度，單位 pixel。
-- `squid_h`：玩家角色的高度，單位 pixel。
-- `squid_vel`：玩家角色的速度，表示方塊每幀移動的像素，單位 pixel。
-- `squid_lv`：玩家角色的等級，最小 1 ，最大 6。
+- `self_x`：玩家角色的Ｘ座標，表示方塊的`中心點`座標值，單位 pixel。
+- `self_y`：玩家角色的Ｙ座標，表示方塊的`中心點`座標值，單位 pixel。
+- `self_w`：玩家角色的寬度，單位 pixel。
+- `self_h`：玩家角色的高度，單位 pixel。
+- `self_vel`：玩家角色的速度，表示方塊每幀移動的像素，單位 pixel。
+- `self_lv`：玩家角色的等級，最小 1 ，最大 6。
 - `foods`：食物的清單，清單內每一個物件都是一個食物的`中心點`座標值，也會提供此食物是什麼類型和分數多少。
   -  `type` 食物類型： `FOOD_1`, `FOOD_2`, `FOOD_3`, `GARBAGE_1`, `GARBAGE_2`, `GARBAGE_3`
 - `score`：目前得到的分數
