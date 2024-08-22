@@ -143,12 +143,12 @@ class SwimmingSquid(PaiaGame):
 
         data_to_1p = {
             "frame": self.frame_count,
-            "squid_x": self.squid.rect.centerx,
-            "squid_y": self.squid.rect.centery,
-            "squid_w": self.squid.rect.width,
-            "squid_h": self.squid.rect.height,
-            "squid_vel": self.squid.vel,
-            "squid_lv": self.squid.lv,
+            "self_x": self.squid.rect.centerx,
+            "self_y": self.squid.rect.centery,
+            "self_w": self.squid.rect.width,
+            "self_h": self.squid.rect.height,
+            "self_vel": self.squid.vel,
+            "self_lv": self.squid.lv,
             "foods": foods_data,
             "score": self.squid.score,
             "score_to_pass": self._score_to_pass,
