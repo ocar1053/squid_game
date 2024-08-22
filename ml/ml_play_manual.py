@@ -15,7 +15,6 @@ class MLPlay:
         """
         # pprint("AI received data from game :", orjson.dumps(scene_info))
         pprint(scene_info)
-        assert scene_info['env']['left']
         actions = []
 
         if pygame.K_w in keyboard or pygame.K_UP in keyboard:
