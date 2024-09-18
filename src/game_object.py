@@ -1,16 +1,15 @@
 import math
+
 import pydantic
 import pygame.sprite
-from pydantic import validator
 
+from mlgame.view.view_model import create_image_view_data, create_text_view_data
 from .env import *
 from .foods import Food
 from .sound_controller import SoundController
-from mlgame.view.view_model import create_rect_view_data, create_image_view_data
 
 
 class LevelParams(pydantic.BaseModel):
-
     playground_size_w: int = 300
     playground_size_h: int = 300
     score_to_pass: int = 10
@@ -23,11 +22,10 @@ class LevelParams(pydantic.BaseModel):
     garbage_2: int = 0
     garbage_3: int = 0
 
-    left:int=-1
-    right:int=-1
-    top:int=-1
-    bottom:int=-1
-
+    left: int = -1
+    right: int = -1
+    top: int = -1
+    bottom: int = -1
 
 
 # level_thresholds = [10, 15, 20, 25, 30]
@@ -103,9 +101,33 @@ class Squid(pygame.sprite.Sprite):
     @property
     def vel(self):
         return self._vel
+
     @property
     def lv(self):
         return self._lv
+
+
+class ScoreText(pygame.sprite.Sprite):
+    def __init__(self, text, color, x, y, groups):
+        pygame.sprite.Sprite.__init__(self, groups)
+        self.rect = pygame.Rect(x, y, SQUID_W, SQUID_H)
+        self.rect.center = (x, y)
+        self._text = text
+        self._color = color
+        self._live_frame = 15
+
+    def update(self):
+
+        self._live_frame-=1
+        self.rect.centery -=3
+        if self._live_frame<=0:
+            self.kill()
+
+    @property
+    def game_object_data(self):
+        return create_text_view_data(
+            self._text, self.rect.centerx, self.rect.centery, self._color,
+            "24px Arial BOLD")
 
 
 def get_current_level(score: int) -> int:
@@ -118,5 +140,5 @@ def get_current_level(score: int) -> int:
 
     for level, threshold in enumerate(LEVEL_THRESHOLDS, start=1):
         if score < threshold:
-            return min(level,6)
-    return len(LEVEL_THRESHOLDS) # Return the next level if score is beyond all thresholds
+            return min(level, 6)
+    return len(LEVEL_THRESHOLDS)  # Return the next level if score is beyond all thresholds
