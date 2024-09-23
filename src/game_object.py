@@ -6,7 +6,6 @@ import pygame.sprite
 from mlgame.view.view_model import create_image_view_data, create_text_view_data
 from .env import *
 from .foods import Food
-from .sound_controller import SoundController
 
 
 class LevelParams(pydantic.BaseModel):
@@ -80,14 +79,16 @@ class Squid(pygame.sprite.Sprite):
 
         )
 
-    def eat_food_and_change_level_and_play_sound(self, food: Food, sound_controller: SoundController):
+    def eat_food_and_change_level_and_play_sound(self, food: Food, sound_list: list):
         self._score += food.score
         new_lv = get_current_level(self._score)
 
         if new_lv > self._lv:
-            sound_controller.play_lv_up()
+            sound_list.append(LV_UP_OBJ)
+
         elif new_lv < self._lv:
-            sound_controller.play_lv_down()
+            sound_list.append(LV_DOWN_OBJ)
+
         if new_lv != self._lv:
             self.rect.width = SQUID_W * LEVEL_PROPERTIES[new_lv]['size_ratio']
             self.rect.height = SQUID_H * LEVEL_PROPERTIES[new_lv]['size_ratio']
@@ -117,10 +118,9 @@ class ScoreText(pygame.sprite.Sprite):
         self._live_frame = 15
 
     def update(self):
-
-        self._live_frame-=1
-        self.rect.centery -=3
-        if self._live_frame<=0:
+        self._live_frame -= 1
+        self.rect.centery -= 3
+        if self._live_frame <= 0:
             self.kill()
 
     @property

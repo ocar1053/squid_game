@@ -1,6 +1,6 @@
 {
   "game_name": "swimming_squid",
-  "version": "2.5.0b3",
+  "version": "2.5.0b4",
   "url": "https://github.com/PAIA-Playful-AI-Arena/swimming_squid",
   "description": "這是一個魷魚吃東西小遊戲，除了讓你熟習所有基本操作，也是 PAIA 的遊戲教學範例",
   "logo": [
@@ -26,17 +26,7 @@
       "type": "path",
       "default": "",
       "help": "可匯入自定義的關卡資料，請參考內建範例的資料格式來設定。使用此設定會覆蓋掉其他關卡設定，也不會使用關卡編號，也不會自動進入下一關。"
-    },
-    {
-      "name": "sound",
-      "verbose": "遊戲音效",
-      "type": "str",
-      "choices": [
-        "on",
-        "off"
-      ],
-      "help": "'on' can turn on the sound.",
-      "default": "on"
     }
+
   ]
 }
