@@ -6,11 +6,11 @@ import pygame
 
 from mlgame.game.paia_game import PaiaGame, GameResultState, GameStatus
 from mlgame.utils.enum import get_ai_name
+from mlgame.view.audio_model import create_music_init_data, create_sound_init_data
 from mlgame.view.decorator import check_game_progress, check_game_result
 from mlgame.view.view_model import *
 from .foods import *
 from .game_object import Squid, LevelParams, ScoreText
-from .sound_controller import SoundController
 
 
 def revise_squid_coordinate(squid: Squid, playground: pygame.Rect):
@@ -37,7 +37,6 @@ class SwimmingSquid(PaiaGame):
             self,
             level: int = -1,
             level_file: str = "",
-            sound: str = "off",
             *args, **kwargs):
         super().__init__(user_num=1)
         self.game_result_state = GameResultState.UN_PASSED
@@ -46,8 +45,9 @@ class SwimmingSquid(PaiaGame):
         self._level_file = level_file
         self.foods = pygame.sprite.Group()
         self._help_texts = pygame.sprite.Group()
-        self.sound_controller = SoundController(sound)
+
         self._game_params = None
+        self._sounds = []
         self._init_game()
 
     def _init_game_by_file(self, level_file_path: str):
@@ -92,7 +92,6 @@ class SwimmingSquid(PaiaGame):
             game_params.bottom = self.playground.bottom
             game_params.right = self.playground.right
             self._game_params = game_params
-            self.sound_controller.play_music()
 
     def update(self, commands):
         # handle command
@@ -125,7 +124,7 @@ class SwimmingSquid(PaiaGame):
             for food in hits:
                 # self.ball.score += food.score
                 # growth play special sound
-                self.squid.eat_food_and_change_level_and_play_sound(food, self.sound_controller)
+                self.squid.eat_food_and_change_level_and_play_sound(food, self._sounds)
                 self._create_foods(food.__class__, 1)
                 if isinstance(food, (Food1, Food2, Food3,)):
                     # add help text
@@ -136,7 +135,8 @@ class SwimmingSquid(PaiaGame):
                         y=food.rect.centery,
                         groups=self._help_texts
                     )
-                    self.sound_controller.play_eating_good()
+
+                    self._sounds.append(EATING_GOOD_OBJ)
                 elif isinstance(food, (Garbage1, Garbage2, Garbage3,)):
                     # add help text
                     ScoreText(
@@ -146,7 +146,7 @@ class SwimmingSquid(PaiaGame):
                         y=food.rect.centery,
                         groups=self._help_texts
                     )
-                    self.sound_controller.play_eating_bad()
+                    self._sounds.append(EATING_BAD_OBJ)
 
     def get_data_from_game_to_player(self):
         """
@@ -193,9 +193,10 @@ class SwimmingSquid(PaiaGame):
 
         if self.is_passed:
             self._level += 1
-            self.sound_controller.play_cheer()
+            self._sounds.append(PASS_OBJ)
         else:
-            self.sound_controller.play_fail()
+            self._sounds.append(FAIL_OBJ)
+
         self._init_game()
 
         pass
@@ -246,9 +247,20 @@ class SwimmingSquid(PaiaGame):
                 # create_image_view_data(
                 #     'bg', self.playground.x, self.playground.y,
                 #     self.playground.w, self.playground.h)
-            ]
-            # "audios": {}
-        }
+            ],
+            "musics": [
+                create_music_init_data("bgm01", file_path=BGM01_PATH, github_raw_url=BGM01_URL),
+
+            ],
+            # Create the sounds list using create_sound_init_data
+            "sounds": [
+                create_sound_init_data("eat_good_food", file_path=EATING_GOOD_PATH, github_raw_url=EATING_GOOD_URL),
+                create_sound_init_data("eat_bad_food", file_path=EATING_BAD_PATH, github_raw_url=EATING_BAD_URL),
+                create_sound_init_data("pass", file_path=PASS_PATH, github_raw_url=PASS_URL),
+                create_sound_init_data("fail", file_path=FAIL_PATH, github_raw_url=FAIL_URL),
+                create_sound_init_data("lv_up", file_path=LV_UP_PATH, github_raw_url=LV_UP_URL),
+                create_sound_init_data("lv_down", file_path=LV_DOWN_PATH, github_raw_url=LV_DOWN_URL),
+            ]}
         return scene_init_data
 
     @check_game_progress
@@ -260,7 +272,7 @@ class SwimmingSquid(PaiaGame):
         for food in self.foods:
             foods_data.append(food.game_object_data)
         game_obj_list = [self.squid.game_object_data]
-        help_texts=[
+        help_texts = [
             obj.game_object_data for obj in self._help_texts
         ]
         game_obj_list.extend(foods_data)
@@ -291,7 +303,13 @@ class SwimmingSquid(PaiaGame):
         scene_progress = create_scene_progress_data(
             frame=self.frame_count, background=backgrounds,
             object_list=game_obj_list,
-            foreground=foregrounds, toggle=toggle_objs)
+            foreground=foregrounds, toggle=toggle_objs,
+            musics=[BGM01_OBJ],
+            sounds=self._sounds
+
+        )
+        self._sounds = []
+
         return scene_progress
 
     @check_game_result
