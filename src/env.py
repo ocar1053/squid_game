@@ -100,8 +100,8 @@ GARBAGE03_URL = ASSET_IMG_URL + "garbage_03.png"
 # https://raw.githubusercontent.com/PAIA-Playful-AI-Arena/easy_game/main/asset/img/background.jpg
 
 # Music URL
-MUSIC_URL = "https://raw.githubusercontent.com/PAIA-Playful-AI-Arena/swimming_squid_battle/main/asset/music/"
-SOUND_URL = "https://raw.githubusercontent.com/PAIA-Playful-AI-Arena/swimming_squid_battle/main/asset/sounds/"
+MUSIC_URL = "https://raw.githubusercontent.com/PAIA-Playful-AI-Arena/swimming_squid/main/asset/music/"
+SOUND_URL = "https://raw.githubusercontent.com/PAIA-Playful-AI-Arena/swimming_squid/main/asset/sounds/"
 
 BGM01_URL = MUSIC_URL + "bgm01.mp3"
 
