@@ -8,6 +8,9 @@
 這是一個魷魚吃東西小遊戲，茫茫的海洋中有美味的食物，也有人類拋棄的垃圾，請用你的AI幫助小小魷魚平安長大。
 
 ![demo](https://github.com/PAIA-Playful-AI-Arena/swimming_squid/blob/main/asset/swimming_squid.gif?raw=true)
+# 更新內容(2.5.0b4)
+1. 更新播音樂音效的方式
+
 # 更新內容(2.5.0b3)
 1. 新增分數特效
 
