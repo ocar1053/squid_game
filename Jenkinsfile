@@ -44,7 +44,7 @@ pipeline {
                   }else{
                     sh """docker buildx build --builder=mybuilder --platform linux/amd64,linux/arm64 \
                       -t ${env.registry}/${game}:${env.branch} \
-                      -f ./Dockerfile . --push
+                      -f ./Dockerfile . --push -q
                     """
                   }
 
