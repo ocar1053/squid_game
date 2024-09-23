@@ -9,7 +9,7 @@ from mlgame.utils.enum import get_ai_name
 from mlgame.view.decorator import check_game_progress, check_game_result
 from mlgame.view.view_model import *
 from .foods import *
-from .game_object import Squid, LevelParams
+from .game_object import Squid, LevelParams, ScoreText
 from .sound_controller import SoundController
 
 
@@ -45,6 +45,7 @@ class SwimmingSquid(PaiaGame):
         self._level = level
         self._level_file = level_file
         self.foods = pygame.sprite.Group()
+        self._help_texts = pygame.sprite.Group()
         self.sound_controller = SoundController(sound)
         self._game_params = None
         self._init_game()
@@ -105,7 +106,7 @@ class SwimmingSquid(PaiaGame):
         revise_squid_coordinate(self.squid, self.playground)
         # update sprite
         self.foods.update(playground=self.playground, squid=self.squid)
-
+        self._help_texts.update()
         # handle collision
 
         self._check_foods_collision()
@@ -127,8 +128,24 @@ class SwimmingSquid(PaiaGame):
                 self.squid.eat_food_and_change_level_and_play_sound(food, self.sound_controller)
                 self._create_foods(food.__class__, 1)
                 if isinstance(food, (Food1, Food2, Food3,)):
+                    # add help text
+                    ScoreText(
+                        text=f"+{food.score}",
+                        color=SCORE_COLOR_PLUS,
+                        x=food.rect.centerx,
+                        y=food.rect.centery,
+                        groups=self._help_texts
+                    )
                     self.sound_controller.play_eating_good()
                 elif isinstance(food, (Garbage1, Garbage2, Garbage3,)):
+                    # add help text
+                    ScoreText(
+                        text=f"{food.score}",
+                        color=SCORE_COLOR_MINUS,
+                        x=food.rect.centerx,
+                        y=food.rect.centery,
+                        groups=self._help_texts
+                    )
                     self.sound_controller.play_eating_bad()
 
     def get_data_from_game_to_player(self):
@@ -243,7 +260,12 @@ class SwimmingSquid(PaiaGame):
         for food in self.foods:
             foods_data.append(food.game_object_data)
         game_obj_list = [self.squid.game_object_data]
+        help_texts=[
+            obj.game_object_data for obj in self._help_texts
+        ]
         game_obj_list.extend(foods_data)
+        game_obj_list.extend(help_texts)
+
         backgrounds = [
             # create_image_view_data("background", 0, 0, WIDTH, HEIGHT),
             # create_rect_view_data(
