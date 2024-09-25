@@ -54,6 +54,7 @@ class SwimmingSquid(PaiaGame):
         try:
             with open(level_file_path) as f:
                 game_params = LevelParams(**json.load(f))
+                self._used_file = level_file_path
 
         except:
             # If the file doesn't exist, use default parameters
@@ -295,10 +296,12 @@ class SwimmingSquid(PaiaGame):
             create_text_view_data(f"Squid Lv: {star_string}", 705, 50, "#EEEEEE", "20px Consolas BOLD"),
             create_text_view_data(f"To Lv up: {LEVEL_THRESHOLDS[self.squid.lv - 1] - self.squid.score :04d} pt", 705,
                                   80, "#EEEEEE", "20px Consolas BOLD"),
-            create_text_view_data(f"Vel     : {self.squid.vel:4d}", 705, 110, "#EEEEEE", "20px Consolas BOLD"),
-            create_text_view_data(f"Timer   : {self._frame_count_down:04d}", 705, 150, "#EEEEEE", "20px Consolas BOLD"),
-            create_text_view_data(f"My Score: {self.squid.score:04d} pt", 705, 180, "#EEEEEE", "20px Consolas BOLD"),
-            create_text_view_data(f"Goal    : {self._score_to_pass:04d} pt", 705, 210, "#EEEEEE", "20px Consolas BOLD"),
+            create_text_view_data(f"File :{os.path.basename(self._used_file)}", 705, 110, "#EEEEEE",
+                                  "20px Consolas BOLD"),
+            create_text_view_data(f"Vel     : {self.squid.vel:4d}", 705, 170, "#EEEEEE", "20px Consolas BOLD"),
+            create_text_view_data(f"Timer   : {self._frame_count_down:04d}", 705, 200, "#EEEEEE", "20px Consolas BOLD"),
+            create_text_view_data(f"My Score: {self.squid.score:04d} pt", 705, 230, "#EEEEEE", "20px Consolas BOLD"),
+            create_text_view_data(f"Goal    : {self._score_to_pass:04d} pt", 705, 260, "#EEEEEE", "20px Consolas BOLD"),
         ]
         scene_progress = create_scene_progress_data(
             frame=self.frame_count, background=backgrounds,
