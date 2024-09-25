@@ -10,7 +10,7 @@ from mlgame.view.audio_model import create_music_init_data, create_sound_init_da
 from mlgame.view.decorator import check_game_progress, check_game_result
 from mlgame.view.view_model import *
 from .foods import *
-from .game_object import Squid, LevelParams, ScoreText
+from .game_object import Squid, LevelParams, ScoreText, WindowConfig
 
 
 def revise_squid_coordinate(squid: Squid, playground: pygame.Rect):
@@ -54,6 +54,7 @@ class SwimmingSquid(PaiaGame):
         try:
             with open(level_file_path) as f:
                 game_params = LevelParams(**json.load(f))
+                self._used_file = level_file_path
 
         except:
             # If the file doesn't exist, use default parameters
@@ -74,7 +75,14 @@ class SwimmingSquid(PaiaGame):
             self._score_to_pass = game_params.score_to_pass
             self._frame_limit = game_params.time_to_play
             self.playground.center = ((WIDTH - WIDTH_OF_INFO) / 2, HEIGHT / 2)
-
+            self._food_window = WindowConfig(
+                left=self.playground.left, right=self.playground.right,
+                top=self.playground.top, bottom=self.playground.bottom)
+            self._garbage_window = WindowConfig(
+                left=self.playground.left, right=self.playground.right,
+                top=self.playground.top - 60, bottom=self.playground.top - 10)
+            self._food_pos_list = []
+            self._garbage_pos_list = []
             # init game
             self.squid = Squid()
             self.foods.empty()
@@ -295,10 +303,12 @@ class SwimmingSquid(PaiaGame):
             create_text_view_data(f"Squid Lv: {star_string}", 705, 50, "#EEEEEE", "20px Consolas BOLD"),
             create_text_view_data(f"To Lv up: {LEVEL_THRESHOLDS[self.squid.lv - 1] - self.squid.score :04d} pt", 705,
                                   80, "#EEEEEE", "20px Consolas BOLD"),
-            create_text_view_data(f"Vel     : {self.squid.vel:4d}", 705, 110, "#EEEEEE", "20px Consolas BOLD"),
-            create_text_view_data(f"Timer   : {self._frame_count_down:04d}", 705, 150, "#EEEEEE", "20px Consolas BOLD"),
-            create_text_view_data(f"My Score: {self.squid.score:04d} pt", 705, 180, "#EEEEEE", "20px Consolas BOLD"),
-            create_text_view_data(f"Goal    : {self._score_to_pass:04d} pt", 705, 210, "#EEEEEE", "20px Consolas BOLD"),
+            create_text_view_data(f"File :{os.path.basename(self._used_file)}", 705, 110, "#EEEEEE",
+                                  "20px Consolas BOLD"),
+            create_text_view_data(f"Vel     : {self.squid.vel:4d}", 705, 170, "#EEEEEE", "20px Consolas BOLD"),
+            create_text_view_data(f"Timer   : {self._frame_count_down:04d}", 705, 200, "#EEEEEE", "20px Consolas BOLD"),
+            create_text_view_data(f"My Score: {self.squid.score:04d} pt", 705, 230, "#EEEEEE", "20px Consolas BOLD"),
+            create_text_view_data(f"Goal    : {self._score_to_pass:04d} pt", 705, 260, "#EEEEEE", "20px Consolas BOLD"),
         ]
         scene_progress = create_scene_progress_data(
             frame=self.frame_count, background=backgrounds,
@@ -354,17 +364,46 @@ class SwimmingSquid(PaiaGame):
         for i in range(count):
             # add food to group
             food = FOOD_TYPE(self.foods)
-            if isinstance(food, Garbage):
+            if isinstance(food, (Food1, Food2, Food3,)):
+                # if food pos list is empty , re-create
+                if len(self._food_pos_list) < 1:
+                    self._food_pos_list = divide_window_into_grid(
+                        self._food_window)
+                pos = self._food_pos_list.pop()
                 food.set_center_x_and_y(
-                    random.randint(self.playground.left, self.playground.right),
-
-                    random.randint(self.playground.top - 30, self.playground.top)
-
+                    pos[0],
+                    pos[1]
                 )
-            else:
+
+
+            elif isinstance(food, (Garbage1, Garbage2, Garbage3,)):
+                if len(self._garbage_pos_list) < 1:
+                    self._garbage_pos_list = divide_window_into_grid(
+                        self._garbage_window, rows=1, cols=10)
+                pos = self._garbage_pos_list.pop()
                 food.set_center_x_and_y(
-                    random.randint(self.playground.left + 20, self.playground.right - 20),
-                    random.randint(self.playground.top + 20, self.playground.bottom - 20)
+                    pos[0],
+                    pos[1]
                 )
 
         pass
+
+
+def divide_window_into_grid(window: WindowConfig, rows: int = 10, cols: int = 10) -> list[(int, int)]:
+    grid_positions = []
+
+    # Calculate width and height of each grid piece
+    width = (window.right - window.left) // cols
+    height = (window.bottom - window.top) // rows
+
+    # Generate grid positions
+    for row in range(rows):
+        for col in range(cols):
+            center_x = window.left + col * width + width // 2
+            center_y = window.top + row * height + height // 2
+            grid_positions.append((center_x, center_y))
+
+    # Shuffle the list to randomize the order of positions
+    random.shuffle(grid_positions)
+
+    return grid_positions
