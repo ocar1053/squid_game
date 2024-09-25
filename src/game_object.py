@@ -2,6 +2,7 @@ import math
 
 import pydantic
 import pygame.sprite
+from pydantic import BaseModel
 
 from mlgame.view.view_model import create_image_view_data, create_text_view_data
 from .env import *
@@ -142,3 +143,9 @@ def get_current_level(score: int) -> int:
         if score < threshold:
             return min(level, 6)
     return len(LEVEL_THRESHOLDS)  # Return the next level if score is beyond all thresholds
+
+class WindowConfig(BaseModel):
+    left: int
+    right: int
+    top: int
+    bottom: int
