@@ -14,7 +14,7 @@ class MLPlay:
         Generate the command according to the received scene information
         """
         # pprint("AI received data from game :", orjson.dumps(scene_info))
-        pprint(scene_info)
+        # pprint(scene_info)
         actions = []
 
         if pygame.K_w in keyboard or pygame.K_UP in keyboard:
