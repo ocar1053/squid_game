@@ -7,28 +7,16 @@
 
 這是一個魷魚吃東西小遊戲，茫茫的海洋中有美味的食物，也有人類拋棄的垃圾，請用你的AI幫助小小魷魚平安長大。
 
-![demo](https://github.com/PAIA-Playful-AI-Arena/swimming_squid/blob/main/asset/swimming_squid.gif?raw=true)
-# 更新內容(2.5.0b4)
-1. 更新播音樂音效的方式
-
-# 更新內容(2.5.0b3)
-1. 新增分數特效
-
-# 更新內容(2.5.0b2)
-1. 調整回傳資料的格式，讓單人遊戲與對戰版的格式可相容。
-
-# 更新內容(2.4.4)
-1. 食物將會隨機生成。
-2. 更新文件與內容。
+![demo](https://raw.githubusercontent.com/PAIA-Playful-AI-Arena/swimming_squid/refs/heads/main/asset/swimming-squid.gif)
 
 ---
-# 基礎介紹
+## 基礎介紹
 
-## 啟動方式
+### 啟動方式
 
-- 直接啟動 [main.py](http://main.py) 即可執行
+- 直接啟動 [main.py](https://github.com/PAIA-Playful-AI-Arena/swimming_squid/blob/main/main.py) 即可執行
 
-## 遊戲參數設定
+### 遊戲參數設定
 
 ```python
 # main.py 
@@ -41,23 +29,23 @@ game = SwimmingSquid(
 - `level_file`: 使用外部檔案作為關卡，請注意，使用此設定將會覆蓋掉關卡編號，並且不會自動進入下一關。
 - `sound`: 音效。
 
-## 玩法
+### 玩法
 
 - 使用鍵盤 上、下、左、右 控制方塊
 
-## 目標
+### 目標
 
 1. 在遊戲時間截止前，盡可能吃到愈多的食物吧！
 
-### 通關條件
+#### 通關條件
 
 1. 時間結束前，吃到的食物超過`score`，即可過關。
 
-### 失敗條件
+#### 失敗條件
 
 1. 時間結束前，吃到的食物少於`score`，即算失敗。
 
-# 座標系統
+## 座標系統
 1. 使用 pygame 座標系，`左上角`為原點，`X軸`往`右`為正，`Y軸`往`下`為正
 2. 回傳的物件座標，皆為物體`中心點`座標
 
@@ -65,9 +53,9 @@ game = SwimmingSquid(
 ---
 
 
-# 進階說明
+## 進階說明
 
-## 使用ＡＩ玩遊戲
+### 使用ＡＩ玩遊戲
 
 ```bash
 # 在easy game中，打開終端機
@@ -75,7 +63,7 @@ python -m mlgame -i ./ml/ml_play_template.py ./ --level 3
 python -m mlgame -i ./ml/ml_play_template.py ./ --level_file /path_to_file/level_file.json
 ```
 
-## ＡＩ範例
+### ＡＩ範例
 
 ```python
 import random
@@ -100,7 +88,7 @@ class MLPlay:
         pass
 ```
 
-## 遊戲資訊
+### 遊戲資訊
 
 - scene_info 的資料格式如下
 
@@ -204,7 +192,7 @@ class MLPlay:
     - `GAME_PASS`：遊戲通關
     - `GAME_OVER`：遊戲結束
 
-## 動作指令
+### 動作指令
 
 - 在 update() 最後要回傳一個字串，主角物件即會依照對應的字串行動，一次只能執行一個行動。
     - `UP`：向上移動
@@ -213,7 +201,7 @@ class MLPlay:
     - `RIGHT`：向右移動
     - `NONE`：原地不動
 
-## 遊戲結果
+### 遊戲結果
 
 - 最後結果會顯示在console介面中，若是PAIA伺服器上執行，會回傳下列資訊到平台上。
 
@@ -244,7 +232,7 @@ class MLPlay:
 
 ---
 
-# 參考資源
+## 參考資源
 - 音效
     1. https://soundeffect-lab.info/sound/anime/
 - 背景音樂
