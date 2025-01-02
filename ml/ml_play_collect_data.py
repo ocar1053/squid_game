@@ -9,6 +9,12 @@ class MLPlay:
         self.search_range = 1000
         self.data = []
         self.all_data = []
+
+        # check if the directory dataset exists
+
+        if not os.path.exists("dataset"):
+            os.makedirs("dataset")
+            print("Directory 'dataset' created.")
         if os.path.exists("dataset/training_data.pkl"):
             with open("dataset/training_data.pkl", "rb") as f:
                 self.all_data = pickle.load(f)
